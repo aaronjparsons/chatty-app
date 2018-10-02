@@ -29,14 +29,24 @@ wss.on('connection', (ws) => {
   
   ws.on('message', function incoming(data) {
     console.log(data);
+    let outgoingData;
     const parsedData = JSON.parse(data);
     const randomId = uuidv1();
-    const username = parsedData.username ? parsedData.username : 'Anonymous';
-    const outgoingData = {
-      id: randomId,
-      username: username,
-      content: parsedData.content
-    };
+    if (parsedData.type === 'postMessage') {
+      const username = parsedData.username ? parsedData.username : 'Anonymous';
+      outgoingData = {
+        type: 'incomingMessage',
+        id: randomId,
+        username: username,
+        content: parsedData.content
+      };
+    } else {
+      outgoingData = {
+        type: 'incomingNotification',
+        id: randomId,
+        content: parsedData.content
+      };
+    }
 
     console.log('Message received:', outgoingData);
     wss.broadcast(JSON.stringify(outgoingData));

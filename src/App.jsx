@@ -17,28 +17,54 @@ class App extends Component {
 
   componentDidMount() {
     this.socket = new WebSocket("ws://localhost:3001/");
-    this.socket.addEventListener('open', (event) => {
-      console.log('connected to the server');
-    });
+    this.socket.onopen = (event) => {
+      console.log("Connected to server");
+    };
     this.socket.onmessage = (event) => {
-      const data = JSON.parse(event.data);
       console.log(event);
+      const data = JSON.parse(event.data);
       const oldMessages = this.state.messages;
-      const newMessages = [...oldMessages, {
-        id: data.id,
-        username: data.username,
-        content: data.content,
-      }];
-      this.setState({messages: newMessages});
+      let newMessages;
+
+      switch(data.type) {
+        case 'incomingMessage':
+          newMessages = [...oldMessages, {
+            type: data.type,
+            id: data.id,
+            username: data.username,
+            content: data.content,
+          }];
+          this.setState({messages: newMessages});
+          break;
+        case 'incomingNotification':
+          newMessages = [...oldMessages, {
+            type: data.type,
+            id: data.id,
+            content: data.content,
+          }];
+          this.setState({messages: newMessages});
+          break;
+        default:
+          throw new Error("Unknown event type " + data.type);
+      }
     }
   }
 
   nameChange(name) {
+    const oldName = this.state.currentUser.name ? this.state.currentUser.name : 'Anonymous';
+    this.socket.send(JSON.stringify({
+      type: 'postNotification',
+      content: `${oldName} changed their name to: ${name}`
+    }));
     this.setState({currentUser: {name: name}});
   }
 
   newMessage(name, content) {
-    const data = {username: name, content: content};
+    const data = {
+      type: 'postMessage',
+      username: name, 
+      content: content
+    };
     this.socket.send(JSON.stringify(data));
   }
 
