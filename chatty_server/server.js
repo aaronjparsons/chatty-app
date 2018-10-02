@@ -17,9 +17,7 @@ const wss = new SocketServer({ server });
 // Broadcast to all users function
 wss.broadcast = function broadcast(data) {
   wss.clients.forEach(function each(client) {
-    if (client.readyState === WebSocket.OPEN) {
-      client.send(data);
-    }
+    client.send(data);
   });
 };
 
@@ -30,15 +28,17 @@ wss.on('connection', (ws) => {
   console.log('Client connected');
   
   ws.on('message', function incoming(data) {
+    console.log(data);
     const parsedData = JSON.parse(data);
     const randomId = uuidv1();
+    const username = parsedData.username ? parsedData.username : 'Anonymous';
     const outgoingData = {
       id: randomId,
-      username: parsedData.username,
+      username: username,
       content: parsedData.content
     };
 
-    console.log(outgoingData);
+    console.log('Message received:', outgoingData);
     wss.broadcast(JSON.stringify(outgoingData));
     // ws.send(JSON.stringify(outgoingData));
   });

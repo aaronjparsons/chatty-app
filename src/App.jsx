@@ -7,10 +7,11 @@ class App extends Component {
   constructor() {
     super();
     this.state = {
-      currentUser: {name: "Bob"}, // optional. if currentUser is not defined, it means the user is Anonymous
+      currentUser: {name: ''}, // optional. if currentUser is not defined, it means the user is Anonymous
       messages: []
     }
     this.socket;
+    this.nameChange = this.nameChange.bind(this);
     this.newMessage = this.newMessage.bind(this);
   }
 
@@ -32,6 +33,10 @@ class App extends Component {
     }
   }
 
+  nameChange(name) {
+    this.setState({currentUser: {name: name}});
+  }
+
   newMessage(name, content) {
     const data = {username: name, content: content};
     this.socket.send(JSON.stringify(data));
@@ -44,7 +49,7 @@ class App extends Component {
           <a href="/" className="navbar-brand">Chatty</a>
         </nav>
         <MessageList messages={this.state.messages} />
-        <ChatBar currentUser={this.state.currentUser.name} newMessage={this.newMessage} />
+        <ChatBar currentUser={this.state.currentUser.name} nameChange={this.nameChange} newMessage={this.newMessage} />
       </div>
     );
   }
