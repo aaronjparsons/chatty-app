@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import { log } from 'util';
 
 class ChatBar extends Component {
   constructor(props) {
@@ -8,6 +9,7 @@ class ChatBar extends Component {
   keyPress(e){
     if(e.keyCode === 13){
        this.props.newMessage(this.props.currentUser, e.target.value);
+       e.target.value = '';
     }
   }
 

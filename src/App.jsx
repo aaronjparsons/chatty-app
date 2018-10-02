@@ -16,21 +16,23 @@ class App extends Component {
 
   componentDidMount() {
     this.socket = new WebSocket("ws://localhost:3001/");
-    this.socket.addEventListener('open', function (event) {
+    this.socket.addEventListener('open', (event) => {
       console.log('connected to the server');
     });
-    
+    this.socket.onmessage = (event) => {
+      const data = JSON.parse(event.data);
+      console.log(event);
+      const oldMessages = this.state.messages;
+      const newMessages = [...oldMessages, {
+        id: data.id,
+        username: data.username,
+        content: data.content,
+      }];
+      this.setState({messages: newMessages});
+    }
   }
 
   newMessage(name, content) {
-    // const randomId = Math.random().toString(36).substr(2, 5);
-    // const oldMessages = this.state.messages;
-    // const newMessages = [...oldMessages, {
-    //   username: name,
-    //   content: content,
-    //   id: randomId
-    // }];
-    // this.setState({messages: newMessages});
     const data = {username: name, content: content};
     this.socket.send(JSON.stringify(data));
   }
