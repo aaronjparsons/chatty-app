@@ -17,50 +17,42 @@ class App extends Component {
     this.newMessage = this.newMessage.bind(this);
   }
 
-  componentDidMount() {
-    this.socket = new WebSocket("ws://localhost:3001/");
-    this.socket.onopen = (event) => {
-      console.log("Connected to server");
-    };
-    this.socket.onmessage = (event) => {
-      console.log(event);
-      const data = JSON.parse(event.data);
-      const oldMessages = this.state.messages;
-      let newMessages;
+  handleIncomingMessage(data) {
+    const oldMessages = this.state.messages;
+    let newMessages;
 
-      switch(data.type) {
-        // Chat messages
-        case 'incomingMessage':
-          newMessages = [...oldMessages, {
-            type: data.type,
-            id: data.id,
-            username: data.username,
-            content: data.content,
-            image: data.image,
-            userColor: data.userColor,
-          }];
-          this.setState({messages: newMessages});
-          break;
-        // System notifications
-        case 'incomingNotification':
-          newMessages = [...oldMessages, {
-            type: data.type,
-            id: data.id,
-            content: data.content,
-          }];
-          this.setState({messages: newMessages});
-          break;
-        // User count update notification
-        case 'userCountUpdate':
-          this.setState({userCount: data.count});
-          break;
-        // User color assignment
-        case 'colorAssignment':
-          this.setState({userColor: data.color});
-          break;
-        default:
-          throw new Error("Unknown event type " + data.type);
-      }
+    switch(data.type) {
+      // Chat messages
+      case 'incomingMessage':
+        newMessages = [...oldMessages, {
+          type: data.type,
+          id: data.id,
+          username: data.username,
+          content: data.content,
+          image: data.image,
+          userColor: data.userColor,
+        }];
+        this.setState({messages: newMessages});
+        break;
+      // System notifications
+      case 'incomingNotification':
+        newMessages = [...oldMessages, {
+          type: data.type,
+          id: data.id,
+          content: data.content,
+        }];
+        this.setState({messages: newMessages});
+        break;
+      // User count update notification
+      case 'userCountUpdate':
+        this.setState({userCount: data.count});
+        break;
+      // User color assignment
+      case 'colorAssignment':
+        this.setState({userColor: data.color});
+        break;
+      default:
+        throw new Error("Unknown event type " + data.type);
     }
   }
 
@@ -81,6 +73,18 @@ class App extends Component {
       userColor: this.state.userColor,
     };
     this.socket.send(JSON.stringify(data));
+  }
+
+  componentDidMount() {
+    this.socket = new WebSocket("ws://localhost:3001/");
+    this.socket.onopen = (event) => {
+      console.log("Connected to server");
+    };
+    this.socket.onmessage = (event) => {
+      console.log(event);
+      const data = JSON.parse(event.data);
+      this.handleIncomingMessage(data);
+    }
   }
 
   render() {
