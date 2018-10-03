@@ -1,20 +1,28 @@
 import React, {Component} from 'react';
 
 class Message extends Component {
-  setupStyles() {
+  setupNameColor() {
     return {
       color: this.props.userColor
     }
   }
 
+  setupContentBg() {
+    if (this.props.alternatingBg) {
+      return {
+        backgroundColor: '#F0F0F0',
+      }
+    }
+  }
+
   createMessageElement() {
     let messageElement;
-    const styles = this.setupStyles();
+    const usernameStyles = this.setupNameColor();
     switch(this.props.type) {
       case 'incomingMessage':
         messageElement = (
             <div className="message">
-              <span className="message-username" style={styles}>{this.props.username}</span>
+              <span className="message-username" style={usernameStyles}>{this.props.username}</span>
               <span className="message-content">{this.props.content}</span>
             </div>
         );
@@ -45,10 +53,11 @@ class Message extends Component {
 
   render() {
     const message = this.createMessageElement();
+    const messageStyles = this.setupContentBg();
     const image = this.createImageElement();
 
     return(
-      <div>
+      <div style={messageStyles}>
         {message}
         {image}
       </div>

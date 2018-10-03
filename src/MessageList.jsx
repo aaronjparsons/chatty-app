@@ -7,6 +7,7 @@ class MessageList extends Component {
       return (
         <Message key={message.id} type={message.type} username={message.username} 
           content={message.content} image={message.image} userColor={message.userColor} 
+          alternatingBg={message.alternatingBg}
         />
       );
     });
@@ -15,7 +16,7 @@ class MessageList extends Component {
 
   render() {
     const messages = this.createMessages();
-    
+
     return (
       <div className='messages'>
         {messages}

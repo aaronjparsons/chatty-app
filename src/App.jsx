@@ -31,6 +31,7 @@ class App extends Component {
           content: data.content,
           image: data.image,
           userColor: data.userColor,
+          alternatingBg: data.alternatingBg,
         }];
         this.setState({messages: newMessages});
         break;
@@ -95,7 +96,9 @@ class App extends Component {
           <h3 className="navbar-user-count">{this.state.userCount} Users Connected</h3>
         </nav>
         <MessageList messages={this.state.messages} />
-        <ChatBar currentUser={this.state.currentUser.name} nameChange={this.nameChange} newMessage={this.newMessage} />
+        <ChatBar currentUser={this.state.currentUser.name} nameChange={this.nameChange} 
+          newMessage={this.newMessage} 
+        />
       </div>
     );
   }

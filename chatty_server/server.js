@@ -2,6 +2,8 @@ const express = require('express');
 const WebSocket = require('ws');
 const uuidv1 = require('uuid/v1');
 
+let alternatingBg = false;
+
 // Set the port to 3001
 const PORT = 3001;
 
@@ -50,7 +52,6 @@ function checkURL(url) {
 // Check if message has an image link in it
 function hasImageLink(content) {
   const words = content.split(' ');
-  console.log(words);
   for (let i of words) {
     if (checkURL(i)) {
       return i;
@@ -67,14 +68,20 @@ function createOutgoingMessage(parsedData) {
   if (parsedData.type === 'postMessage') {
     const username = parsedData.username ? parsedData.username : 'Anonymous';
     const image = hasImageLink(parsedData.content);
+    // Remove the image link from the message
+    const parsedContent = parsedData.content.split(' ').filter(word => {
+      return word !== image;
+    }).join(' ');
     outgoingData = {
       type: 'incomingMessage',
       id: randomId,
       username: username,
-      content: parsedData.content,
+      content: parsedContent,
       image: image,
       userColor: parsedData.userColor,
+      alternatingBg: alternatingBg,
     }
+    alternatingBg = !alternatingBg;
   } else {
     outgoingData = {
       type: 'incomingNotification',
