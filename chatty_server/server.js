@@ -40,10 +40,12 @@ function assignColor(ws) {
   }));
 }
 
+// Regex to check for .jpeg/jpg/gif/png extension
 function checkURL(url) {
   return(url.match(/\.(jpeg|jpg|gif|png)$/) !== null);
 }
 
+// Check if message has an image link in it
 function hasImageLink(content) {
   const words = content.split(' ');
   console.log(words);
@@ -54,6 +56,43 @@ function hasImageLink(content) {
   }
   return false;
 }
+
+// Create the outgoing message data depending on the type
+function createOutgoingMessage(parsedData) {
+  let outgoingData;
+  const randomId = uuidv1();
+
+  if (parsedData.type === 'postMessage') {
+    const username = parsedData.username ? parsedData.username : 'Anonymous';
+    const image = hasImageLink(parsedData.content);
+    if (!image) {
+      outgoingData = {
+        type: 'incomingMessage',
+        id: randomId,
+        username: username,
+        content: parsedData.content,
+        userColor: parsedData.userColor,
+      };
+    } else {
+      outgoingData = {
+        type: 'incomingMessage',
+        id: randomId,
+        username: username,
+        content: parsedData.content,
+        image: image,
+        userColor: parsedData.userColor,
+      };
+    }
+  } else {
+    outgoingData = {
+      type: 'incomingNotification',
+      id: randomId,
+      content: parsedData.content
+    };
+  }
+  return outgoingData;
+}
+
 
 // Set up a callback that will run when a client connects to the server
 // When a client connects they are assigned a socket, represented by
@@ -68,37 +107,8 @@ wss.on('connection', (ws) => {
   
   ws.on('message', function incoming(data) {
     console.log(data);
-    let outgoingData;
     const parsedData = JSON.parse(data);
-    const randomId = uuidv1();
-    if (parsedData.type === 'postMessage') {
-      const username = parsedData.username ? parsedData.username : 'Anonymous';
-      const image = hasImageLink(parsedData.content);
-      if (!image) {
-        outgoingData = {
-          type: 'incomingMessage',
-          id: randomId,
-          username: username,
-          content: parsedData.content,
-          userColor: parsedData.userColor,
-        };
-      } else {
-        outgoingData = {
-          type: 'incomingMessage',
-          id: randomId,
-          username: username,
-          content: parsedData.content,
-          image: image,
-          userColor: parsedData.userColor,
-        };
-      }
-    } else {
-      outgoingData = {
-        type: 'incomingNotification',
-        id: randomId,
-        content: parsedData.content
-      };
-    }
+    const outgoingData = createOutgoingMessage(parsedData);
 
     console.log('Message received:', outgoingData);
     wss.broadcast(JSON.stringify(outgoingData));
