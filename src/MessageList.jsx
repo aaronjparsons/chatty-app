@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import Message from './Message.jsx';
 
 class MessageList extends Component {
-  render() {
+  createMessages() {
     const messages = this.props.messages.map((message) => {
       return (
         <Message key={message.id} type={message.type} username={message.username} 
@@ -10,7 +10,12 @@ class MessageList extends Component {
         />
       );
     });
+    return messages;
+  }
 
+  render() {
+    const messages = this.createMessages();
+    
     return (
       <div className='messages'>
         {messages}
