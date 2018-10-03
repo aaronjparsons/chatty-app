@@ -95,3 +95,22 @@ img {
   max-width: 60%;
   height: auto;
 }
+
+#emoji-toggle {
+  width: 25px;
+  height: auto;
+  opacity: 0.35;
+  position: fixed;
+  bottom: 2.7%;
+  right: 15px;
+}
+
+#emoji-toggle:hover {
+  cursor: pointer;
+}
+
+#emoji-picker {
+  position: fixed;
+  bottom: 63px;
+  right: 0;
+}
