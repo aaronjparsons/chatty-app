@@ -21,11 +21,50 @@ wss.broadcast = function broadcast(data) {
   });
 };
 
+// Function to update connected user count
+function updateUserCount() {
+  const amount = wss.clients.size;
+  wss.broadcast(JSON.stringify({
+    type: 'userCountUpdate',
+    count: amount
+  }));
+}
+
+// Function to assign users a color
+function assignColor(ws) {
+  const colors = ['#1BE7FF', '#6EEB83', '#E4FF1A', '#FF5714'];
+  const randomColor = colors[Math.floor(Math.random() * colors.length)];
+  ws.send(JSON.stringify({
+    type: 'colorAssignment',
+    color: randomColor
+  }));
+}
+
+function checkURL(url) {
+  return(url.match(/\.(jpeg|jpg|gif|png)$/) !== null);
+}
+
+function hasImageLink(content) {
+  const words = content.split(' ');
+  console.log(words);
+  for (let i of words) {
+    if (checkURL(i)) {
+      return i;
+    }
+  }
+  return false;
+}
+
 // Set up a callback that will run when a client connects to the server
 // When a client connects they are assigned a socket, represented by
 // the ws parameter in the callback.
 wss.on('connection', (ws) => {
   console.log('Client connected');
+
+  // Update user count when new user connects
+  updateUserCount();
+  // Assign them a color
+  assignColor(ws);
   
   ws.on('message', function incoming(data) {
     console.log(data);
@@ -34,12 +73,25 @@ wss.on('connection', (ws) => {
     const randomId = uuidv1();
     if (parsedData.type === 'postMessage') {
       const username = parsedData.username ? parsedData.username : 'Anonymous';
-      outgoingData = {
-        type: 'incomingMessage',
-        id: randomId,
-        username: username,
-        content: parsedData.content
-      };
+      const image = hasImageLink(parsedData.content);
+      if (!image) {
+        outgoingData = {
+          type: 'incomingMessage',
+          id: randomId,
+          username: username,
+          content: parsedData.content,
+          userColor: parsedData.userColor,
+        };
+      } else {
+        outgoingData = {
+          type: 'incomingMessage',
+          id: randomId,
+          username: username,
+          content: parsedData.content,
+          image: image,
+          userColor: parsedData.userColor,
+        };
+      }
     } else {
       outgoingData = {
         type: 'incomingNotification',
@@ -50,9 +102,12 @@ wss.on('connection', (ws) => {
 
     console.log('Message received:', outgoingData);
     wss.broadcast(JSON.stringify(outgoingData));
-    // ws.send(JSON.stringify(outgoingData));
   });
 
   // Set up a callback for when a client closes the socket. This usually means they closed their browser.
-  ws.on('close', () => console.log('Client disconnected'));
+  ws.on('close', () => {
+    console.log('Client disconnected')
+    // Update user count when user disconnects
+    updateUserCount();
+  });
 });

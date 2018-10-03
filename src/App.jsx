@@ -8,7 +8,9 @@ class App extends Component {
     super();
     this.state = {
       currentUser: {name: ''}, // optional. if currentUser is not defined, it means the user is Anonymous
-      messages: []
+      messages: [],
+      userCount: 0,
+      userColor: null,
     }
     this.socket;
     this.nameChange = this.nameChange.bind(this);
@@ -27,15 +29,19 @@ class App extends Component {
       let newMessages;
 
       switch(data.type) {
+        // Chat messages
         case 'incomingMessage':
           newMessages = [...oldMessages, {
             type: data.type,
             id: data.id,
             username: data.username,
             content: data.content,
+            image: data.image,
+            userColor: data.userColor,
           }];
           this.setState({messages: newMessages});
           break;
+        // System notifications
         case 'incomingNotification':
           newMessages = [...oldMessages, {
             type: data.type,
@@ -43,6 +49,14 @@ class App extends Component {
             content: data.content,
           }];
           this.setState({messages: newMessages});
+          break;
+        // User count update notification
+        case 'userCountUpdate':
+          this.setState({userCount: data.count});
+          break;
+        // User color assignment
+        case 'colorAssignment':
+          this.setState({userColor: data.color});
           break;
         default:
           throw new Error("Unknown event type " + data.type);
@@ -63,7 +77,8 @@ class App extends Component {
     const data = {
       type: 'postMessage',
       username: name, 
-      content: content
+      content: content,
+      userColor: this.state.userColor,
     };
     this.socket.send(JSON.stringify(data));
   }
@@ -73,6 +88,7 @@ class App extends Component {
       <div>
         <nav className="navbar">
           <a href="/" className="navbar-brand">Chatty</a>
+          <h3 className="navbar-user-count">{this.state.userCount} Users Connected</h3>
         </nav>
         <MessageList messages={this.state.messages} />
         <ChatBar currentUser={this.state.currentUser.name} nameChange={this.nameChange} newMessage={this.newMessage} />
