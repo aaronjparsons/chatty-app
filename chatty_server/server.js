@@ -54,7 +54,7 @@ function hasImageLink(content) {
       return i;
     }
   }
-  return false;
+  return null;
 }
 
 // Create the outgoing message data depending on the type
@@ -65,23 +65,13 @@ function createOutgoingMessage(parsedData) {
   if (parsedData.type === 'postMessage') {
     const username = parsedData.username ? parsedData.username : 'Anonymous';
     const image = hasImageLink(parsedData.content);
-    if (!image) {
-      outgoingData = {
-        type: 'incomingMessage',
-        id: randomId,
-        username: username,
-        content: parsedData.content,
-        userColor: parsedData.userColor,
-      };
-    } else {
-      outgoingData = {
-        type: 'incomingMessage',
-        id: randomId,
-        username: username,
-        content: parsedData.content,
-        image: image,
-        userColor: parsedData.userColor,
-      };
+    outgoingData = {
+      type: 'incomingMessage',
+      id: randomId,
+      username: username,
+      content: parsedData.content,
+      image: image,
+      userColor: parsedData.userColor,
     }
   } else {
     outgoingData = {
