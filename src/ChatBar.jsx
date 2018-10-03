@@ -5,9 +5,7 @@ import Smiley from '../public/images/smiley.png';
  
 //emoji set up
 let jsemoji = new JSEMOJI();
-// set the style to emojione (default - apple)
 jsemoji.img_set = 'emojione';
-// set the storage location for all emojis
 jsemoji.img_sets.emojione.path = 'https://cdn.jsdelivr.net/emojione/assets/3.0/png/32/';
 
 
@@ -50,7 +48,7 @@ class ChatBar extends Component {
     if (this.state.emojiTrue) {
       return (
         <div id='emoji-picker'>
-          <EmojiPicker onEmojiClick={this.emojiClick}/>
+          <EmojiPicker onEmojiClick={this.emojiClick} />
         </div>
       )
     }

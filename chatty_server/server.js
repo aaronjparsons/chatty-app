@@ -80,15 +80,16 @@ function createOutgoingMessage(parsedData) {
       image: image,
       userColor: parsedData.userColor,
       alternatingBg: alternatingBg,
-    }
-    alternatingBg = !alternatingBg;
+    };
   } else {
     outgoingData = {
       type: 'incomingNotification',
       id: randomId,
-      content: parsedData.content
+      content: parsedData.content,
+      alternatingBg: alternatingBg,
     };
   }
+  alternatingBg = !alternatingBg;
   return outgoingData;
 }
 

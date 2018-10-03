@@ -1,5 +1,6 @@
 @import url("https://fonts.googleapis.com/css?family=Open+Sans:400,400italic,700");
 @import url("https://cdnjs.cloudflare.com/ajax/libs/normalize/4.2.0/normalize.min.css");
+@import url('https://fonts.googleapis.com/css?family=Lobster');
 
 body {
   background: white;
@@ -23,6 +24,7 @@ body {
 .chatbar-message,
 .chatbar-username {
   border: 1px solid black;
+  border-radius: 10px;
   display: block;
   height: 40px;
   line-height: 40px;
@@ -76,11 +78,12 @@ body {
 }
 
 .navbar-brand {
+  font-family: 'Lobster', cursive;
   color: inherit;
   display: block;
   float: left;
-  font-weight: 700;
-  font-size: 28px;
+  font-weight: 400;
+  font-size: 42px;
   height: 60px;
   line-height: 60px;
   padding: 0 10px;
@@ -102,7 +105,7 @@ img {
   opacity: 0.35;
   position: fixed;
   bottom: 2.7%;
-  right: 15px;
+  right: 20px;
 }
 
 #emoji-toggle:hover {

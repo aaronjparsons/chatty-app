@@ -41,6 +41,7 @@ class App extends Component {
           type: data.type,
           id: data.id,
           content: data.content,
+          alternatingBg: data.alternatingBg,
         }];
         this.setState({messages: newMessages});
         break;
