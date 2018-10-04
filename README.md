@@ -6,6 +6,8 @@ SUMMARY ----
 
 ### Screenshots
 
+![App Screenshot 1](https://github.com/aaronjparsons/chatty-app/blob/master/docs/gif.gif)
+![App Screenshot 2](https://github.com/aaronjparsons/chatty-app/blob/master/docs/gif2.gif)
 
 
 ### Usage & Setup
