@@ -1,8 +1,6 @@
 # Chatty
-=====================
 
-SUMMARY ----
-
+Chatty is a single page chat app built with React and Express using WebSockets. Users are given a random name when they join and can choice to change it if they'd like. Chatty features a list of all online users, 😎emojis🤗, and supports images and gifs when a link is posted with the jpg/jpeg/png/gif extensions. 
 
 ### Screenshots
 
@@ -23,5 +21,8 @@ SUMMARY ----
 * React
 * Webpack
 * Babel
+* Express
+* ws
+* uuid
 * emoji-js
 * emoji-picker-react
