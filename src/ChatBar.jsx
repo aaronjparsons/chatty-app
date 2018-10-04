@@ -27,7 +27,6 @@ class ChatBar extends Component {
   }
   handleUsername(e) {
     if (e.keyCode === 13) {
-      console.log('Name changed');
       this.props.nameChange(e.target.value);
       // Remove the focus from the name input after hitting enter
       e.target.blur();

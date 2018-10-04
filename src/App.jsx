@@ -61,7 +61,6 @@ class App extends Component {
       // User list data update
       case 'userListUpdate':
         this.setState({userList: data.userList});
-        console.log(this.state.userList);
         break;
       default:
         throw new Error("Unknown event type " + data.type);
@@ -93,10 +92,9 @@ class App extends Component {
   componentDidMount() {
     this.socket = new WebSocket("ws://localhost:3001/");
     this.socket.onopen = (event) => {
-      console.log("Connected to server");
     };
+
     this.socket.onmessage = (event) => {
-      console.log(event);
       const data = JSON.parse(event.data);
       this.handleIncomingMessage(data);
     }
