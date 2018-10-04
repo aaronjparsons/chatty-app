@@ -2,17 +2,20 @@
 @import url("https://cdnjs.cloudflare.com/ajax/libs/normalize/4.2.0/normalize.min.css");
 @import url('https://fonts.googleapis.com/css?family=Lobster');
 
+$bgColor: #1B2432;
+$borderColor: #121420;
+
 body {
-  background: white;
-  color: black;
+  background: #403F4C;
+  color:	#fbf7f5;
   font-family: 'Open Sans', sans-serif;
   font-size: 14px;
-  margin: 70px 0;
+  margin: 60px 0;
 }
 
 .chatbar {
-  background: tomato;
-  border-top: 1px solid black;
+  background: $bgColor;
+  border-top: 1px solid $borderColor;
   bottom: 0;
   display: flex;
   left: 0;
@@ -23,7 +26,7 @@ body {
 
 .chatbar-message,
 .chatbar-username {
-  border: 1px solid black;
+  border: 1px solid $borderColor;
   border-radius: 10px;
   display: block;
   height: 40px;
@@ -67,8 +70,9 @@ body {
 }
 
 .navbar {
-  background: tomato;
-  border-bottom: 1px solid black;
+  background: $bgColor;
+  color: #B76D68;
+  border-bottom: 1px solid $borderColor;
   height: 60px;
   left: 0;
   padding: 0 10px;

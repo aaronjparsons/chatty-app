@@ -10,7 +10,7 @@ class Message extends Component {
   setupContentBg() {
     if (this.props.alternatingBg) {
       return {
-        backgroundColor: '#F0F0F0',
+        backgroundColor: '#2C2B3C',
       }
     }
   }
