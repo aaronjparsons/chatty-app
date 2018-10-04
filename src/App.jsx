@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import MessageList from './MessageList.jsx';
 import ChatBar from './ChatBar.jsx';
-import UserList from './UserList.jsx';
 
 
 class App extends Component {
@@ -101,6 +100,11 @@ class App extends Component {
     }
   }
 
+  componentDidUpdate() {
+    var elem = document.body;
+    elem.scrollTop = elem.scrollHeight;
+  }
+
   render() {
     return (
       <div>
@@ -112,7 +116,6 @@ class App extends Component {
         <ChatBar currentUser={this.state.currentUser.name} nameChange={this.nameChange} 
           newMessage={this.newMessage} 
         />
-        
       </div>
     );
   }

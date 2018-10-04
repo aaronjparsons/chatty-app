@@ -15,6 +15,14 @@ class MessageList extends Component {
     return messages;
   }
 
+  componentDidUpdate() {
+    this.scrollToBottom();
+  }
+
+  scrollToBottom() {
+    this.scrollTarget.scrollIntoView({ behavior: 'smooth' });
+  }
+
   render() {
     const messages = this.createMessages();
 
@@ -22,6 +30,7 @@ class MessageList extends Component {
       <div className='message-container'>
         <div className='messages'>
           {messages}
+          <div ref={scrollTarget => { this.scrollTarget = scrollTarget; }} />
         </div>
         <div className='user-list-container'>
           <UserList userList={this.props.userList} />
