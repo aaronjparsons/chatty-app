@@ -38,7 +38,6 @@ function updateUsername(ws, username) {
   }));
 }
 
-// Function to update connected user count
 function updateUserCount() {
   const amount = wss.clients.size;
   wss.broadcast(JSON.stringify({
@@ -64,7 +63,6 @@ function removeFromUserList(username) {
   }));
 }
 
-// Function to assign users a color
 function assignColor(ws) {
   const colors = ['#1BE7FF', '#6EEB83', '#E4FF1A', '#FF5714'];
   const randomColor = colors[Math.floor(Math.random() * colors.length)];
@@ -88,6 +86,16 @@ function hasImageLink(content) {
     }
   }
   return null;
+}
+
+function performNameChange(ws, oldName, newName) {
+  updateUsername(ws, newName);
+  const index = userList.indexOf(oldName);
+  userList.splice(index, 1, newName);
+  wss.broadcast(JSON.stringify({
+    type: 'userListUpdate',
+    userList: userList
+  }));
 }
 
 // Create the outgoing message data depending on the type
@@ -136,26 +144,15 @@ wss.on('connection', (ws) => {
   // Update user count and user list when new user connects
   updateUserCount();
   addToUserList(username);
-  console.log(userList);
   // Assign them a color
   assignColor(ws);
   
   ws.on('message', function incoming(data) {
-    console.log(data);
     const parsedData = JSON.parse(data);
     if (parsedData.type === 'postUsernameUpdate') {
-      const oldName = username;
-      updateUsername(ws, parsedData.username);
-      const index = userList.indexOf(oldName);
-      userList.splice(index, 1, parsedData.username);
-      wss.broadcast(JSON.stringify({
-        type: 'userListUpdate',
-        userList: userList
-      }));
+      performNameChange(ws, username, parsedData.username);
     } else {
       const outgoingData = createOutgoingMessage(parsedData);
-
-      console.log('Message received:', outgoingData);
       wss.broadcast(JSON.stringify(outgoingData));
     }
   });

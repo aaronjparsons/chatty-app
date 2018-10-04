@@ -1,8 +1,7 @@
 import React, {Component} from 'react';
 
-class UserList extends Component {
-  render() {
-    const users = this.props.userList.map((user) => {
+function UserList(props) {
+    const users = props.userList.map((user) => {
       return (<p key={user} className='user-list'>{user}</p>);
     });
     return (
@@ -10,6 +9,5 @@ class UserList extends Component {
         {users}
       </div>
     );
-  }
 }
 export default UserList;
