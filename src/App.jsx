@@ -1,16 +1,18 @@
 import React, {Component} from 'react';
 import MessageList from './MessageList.jsx';
 import ChatBar from './ChatBar.jsx';
+import UserList from './UserList.jsx';
 
 
 class App extends Component {
   constructor() {
     super();
     this.state = {
-      currentUser: {name: ''}, // optional. if currentUser is not defined, it means the user is Anonymous
+      currentUser: {name: ''}, 
       messages: [],
       userCount: 0,
       userColor: null,
+      userList: [],
     }
     this.socket;
     this.nameChange = this.nameChange.bind(this);
@@ -53,18 +55,28 @@ class App extends Component {
       case 'colorAssignment':
         this.setState({userColor: data.color});
         break;
+      case 'usernameUpdate':
+        this.setState({currentUser: {name: data.name}});
+        break;
+      case 'userListUpdate':
+        this.setState({userList: data.userList});
+        console.log(this.state.userList);
+        break;
       default:
         throw new Error("Unknown event type " + data.type);
     }
   }
 
   nameChange(name) {
-    const oldName = this.state.currentUser.name ? this.state.currentUser.name : 'Anonymous';
+    const oldName = this.state.currentUser.name;
     this.socket.send(JSON.stringify({
       type: 'postNotification',
       content: `${oldName} changed their name to: ${name}`
     }));
-    this.setState({currentUser: {name: name}});
+    this.socket.send(JSON.stringify({
+      type: 'postUsernameUpdate',
+      username: name
+    }));
   }
 
   newMessage(name, content) {
@@ -96,10 +108,11 @@ class App extends Component {
           <a href="/" className="navbar-brand">Chatty</a>
           <h3 className="navbar-user-count">{this.state.userCount} Users Connected</h3>
         </nav>
-        <MessageList messages={this.state.messages} />
+        <MessageList messages={this.state.messages} userList={this.state.userList}/>
         <ChatBar currentUser={this.state.currentUser.name} nameChange={this.nameChange} 
           newMessage={this.newMessage} 
         />
+        
       </div>
     );
   }

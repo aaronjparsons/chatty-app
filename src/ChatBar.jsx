@@ -69,8 +69,9 @@ class ChatBar extends Component {
             placeholder="Type a message and hit ENTER" 
             onKeyDown={this.handleMessage}
           />
+          <img id='emoji-toggle' src={Smiley} onClick={this.emojiToggle} />
         </footer>
-        <img id='emoji-toggle' src={Smiley} onClick={this.emojiToggle} />
+        
         {emojiTable}
       </div>
     );

@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import Message from './Message.jsx';
+import UserList from './UserList.jsx';
 
 class MessageList extends Component {
   createMessages() {
@@ -18,8 +19,13 @@ class MessageList extends Component {
     const messages = this.createMessages();
 
     return (
-      <div className='messages'>
-        {messages}
+      <div className='message-container'>
+        <div className='messages'>
+          {messages}
+        </div>
+        <div className='user-list-container'>
+          <UserList userList={this.props.userList} />
+        </div>
       </div>
     );
   }

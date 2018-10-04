@@ -3,6 +3,7 @@ const WebSocket = require('ws');
 const uuidv1 = require('uuid/v1');
 
 let alternatingBg = false;
+let userList = [];
 
 // Set the port to 3001
 const PORT = 3001;
@@ -25,12 +26,41 @@ wss.broadcast = function broadcast(data) {
   });
 };
 
+function randomUsername() {
+  const num = Math.floor(1000 + Math.random() * 9000);
+  return `user${num}`;
+}
+
+function updateUsername(ws, username) {
+  ws.send(JSON.stringify({
+    type: 'usernameUpdate',
+    name: username
+  }));
+}
+
 // Function to update connected user count
 function updateUserCount() {
   const amount = wss.clients.size;
   wss.broadcast(JSON.stringify({
     type: 'userCountUpdate',
     count: amount
+  }));
+}
+
+function addToUserList(username) {
+  userList.push(username);
+  wss.broadcast(JSON.stringify({
+    type: 'userListUpdate',
+    userList: userList
+  }));
+}
+
+function removeFromUserList(username) {
+  const index = userList.indexOf(username);
+  userList.splice(index, 1);
+  wss.broadcast(JSON.stringify({
+    type: 'userListUpdate',
+    userList: userList
   }));
 }
 
@@ -66,7 +96,7 @@ function createOutgoingMessage(parsedData) {
   const randomId = uuidv1();
 
   if (parsedData.type === 'postMessage') {
-    const username = parsedData.username ? parsedData.username : 'Anonymous';
+    const username = parsedData.username;
     const image = hasImageLink(parsedData.content);
     // Remove the image link from the message
     const parsedContent = parsedData.content.split(' ').filter(word => {
@@ -100,24 +130,41 @@ function createOutgoingMessage(parsedData) {
 wss.on('connection', (ws) => {
   console.log('Client connected');
 
-  // Update user count when new user connects
+  let username = randomUsername();
+  updateUsername(ws, username);
+
+  // Update user count and user list when new user connects
   updateUserCount();
+  addToUserList(username);
+  console.log(userList);
   // Assign them a color
   assignColor(ws);
   
   ws.on('message', function incoming(data) {
     console.log(data);
     const parsedData = JSON.parse(data);
-    const outgoingData = createOutgoingMessage(parsedData);
+    if (parsedData.type === 'postUsernameUpdate') {
+      const oldName = username;
+      updateUsername(ws, parsedData.username);
+      const index = userList.indexOf(oldName);
+      userList.splice(index, 1, parsedData.username);
+      wss.broadcast(JSON.stringify({
+        type: 'userListUpdate',
+        userList: userList
+      }));
+    } else {
+      const outgoingData = createOutgoingMessage(parsedData);
 
-    console.log('Message received:', outgoingData);
-    wss.broadcast(JSON.stringify(outgoingData));
+      console.log('Message received:', outgoingData);
+      wss.broadcast(JSON.stringify(outgoingData));
+    }
   });
 
   // Set up a callback for when a client closes the socket. This usually means they closed their browser.
   ws.on('close', () => {
     console.log('Client disconnected')
-    // Update user count when user disconnects
+    // Update user count and user list when user disconnects
+    removeFromUserList(username);
     updateUserCount();
   });
 });

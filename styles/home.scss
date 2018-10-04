@@ -8,6 +8,10 @@ $borderColor: #121420;
 $orange: #B76D68;
 $offWhite: #fbf7f5;
 
+* {
+  box-sizing: border-box;
+}
+
 body {
   background: $lightBackgroundColor;
   color: $offWhite;
@@ -25,6 +29,7 @@ body {
   padding: 5px;
   position: fixed;
   right: 0;
+  width: 80%;
 }
 
 .chatbar-message,
@@ -45,6 +50,22 @@ body {
 
 .chatbar-username {
   flex: 2;
+}
+
+.message-container {
+  display: flex;
+}
+
+.messages {
+  width: 80%;
+}
+
+.user-list-container {
+  width: 20%;
+  height: 100%;
+  border-left: 1px solid $borderColor;
+  position: fixed;
+  right: 0;
 }
 
 .message {
@@ -112,8 +133,8 @@ img {
   height: auto;
   opacity: 0.35;
   position: fixed;
-  bottom: 2.7%;
-  right: 20px;
+  bottom: 2.4%;
+  right: 22%;
 }
 
 #emoji-toggle:hover {
