@@ -6,6 +6,7 @@ function UserList(props) {
     });
     return (
       <div>
+        <div className='user-list-header'>{props.userCount} User(s) Online</div>
         {users}
       </div>
     );

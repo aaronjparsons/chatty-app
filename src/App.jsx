@@ -54,9 +54,11 @@ class App extends Component {
       case 'colorAssignment':
         this.setState({userColor: data.color});
         break;
+      // Name change update
       case 'usernameUpdate':
         this.setState({currentUser: {name: data.name}});
         break;
+      // User list data update
       case 'userListUpdate':
         this.setState({userList: data.userList});
         console.log(this.state.userList);
@@ -100,19 +102,13 @@ class App extends Component {
     }
   }
 
-  componentDidUpdate() {
-    var elem = document.body;
-    elem.scrollTop = elem.scrollHeight;
-  }
-
   render() {
     return (
       <div>
         <nav className="navbar">
           <a href="/" className="navbar-brand">Chatty</a>
-          <h3 className="navbar-user-count">{this.state.userCount} Users Connected</h3>
         </nav>
-        <MessageList messages={this.state.messages} userList={this.state.userList}/>
+        <MessageList messages={this.state.messages} userList={this.state.userList} userCount={this.state.userCount}/>
         <ChatBar currentUser={this.state.currentUser.name} nameChange={this.nameChange} 
           newMessage={this.newMessage} 
         />

@@ -20,6 +20,7 @@ class MessageList extends Component {
   }
 
   scrollToBottom() {
+    // Auto scrolls to the empty div at bottom of messages
     this.scrollTarget.scrollIntoView({ behavior: 'smooth' });
   }
 
@@ -33,7 +34,7 @@ class MessageList extends Component {
           <div ref={scrollTarget => { this.scrollTarget = scrollTarget; }} />
         </div>
         <div className='user-list-container'>
-          <UserList userList={this.props.userList} />
+          <UserList userList={this.props.userList} userCount={this.props.userCount} />
         </div>
       </div>
     );

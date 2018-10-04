@@ -17,7 +17,6 @@ body {
   color: $offWhite;
   font-family: 'Open Sans', sans-serif;
   font-size: 14px;
-  margin: 60px 0;
 }
 
 .chatbar {
@@ -58,10 +57,10 @@ body {
 
 .messages {
   width: 80%;
+  margin-top: 60px;
 }
 
 .user-list-container {
-  padding-left: 5px;
   width: 20%;
   height: 100%;
   border-left: 1px solid $borderColor;
@@ -69,7 +68,18 @@ body {
   right: 0;
 }
 
+.user-list-header {
+  height: 60px;
+  background-color: $darkBackgroundColor;
+  border-bottom: 1px solid $borderColor;
+  color: $orange;
+  text-align: center;
+  line-height: 60px;
+  font-size: 16px;
+}
+
 .user-list {
+  padding-left: 5px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -109,6 +119,7 @@ body {
   color: $orange;
   border-bottom: 1px solid $borderColor;
   height: 60px;
+  width: 80%;
   left: 0;
   padding: 0 10px;
   position: fixed;
